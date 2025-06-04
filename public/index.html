@@ -6,27 +6,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta author="Esteban Rios Puto">
+    <meta author="Esteban Rios">
     <link href="/src/output.css" rel="stylesheet">
     <title>Calculadora Subneteo</title>
 </head>
-<body class="text-sm bg-[repeating-linear-gradient(45deg,_#111_0px,_#111_10px,_#1f1f1f_10px,_#1f1f1f_20px)] text-white min-h-screen">
+<!-- bg-[repeating-linear-gradient(45deg,_#111_0px,_#111_10px,_#1f1f1f_10px,_#1f1f1f_20px)] -->
+<body class="text-sm bg-white text-white min-h-screen font-[Ancizar-400]">
 
-    <header class="bg-stone-950 border-b border-gray-300">
+    <header class="bg-white ">
         <nav>   
-            <div>
-
-            </div>
-            <h1 class="text-center text-4xl font-extrabold py-4 bg-gradient-to-r from-blue-700 via-indigo-   to-cyan-400 bg-clip-text text-transparent">Calculadora de Subneteo</h1>
+            <h1 class="text-center font-[CascadiaCode-400] text-4xl font-extrabold py-4 bg-gradient-to-r from-blue-700 via-blues-500   to-cyan-400 bg-clip-text text-transparent">Calculadora de Subneteo</h1>
         </nav>
     </header>
 
-    <div class="container max-w-full px-20">
+    <div class="container max-w-full px-20  bg-blue-100  p-4 rounded-t-[3rem] ">
 
-        <main class="grid md:grid-cols-6 gap-6 mt-5 items-start ">
+        <main class="grid md:grid-cols-6 gap-6 mt-5 items-start">
             <!-- Tarjeta 1 -->
-            <form id="subnetForm" class="p-6 border bg-stone-950 text-white  md:col-span-2 border-gray-300  shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl">
-                <h2 class="mb-4 text-xl font-light text-sky-300">Calculadora de subredes CIDR IPv4</h2>
+            <form id="subnetForm" class="p-6 border-2 bg-white text-black  md:col-span-2 border-gray-400  shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl">
+                <h2 class="mb-4 text-xl font-[CascadiaCode-400] text-sky-700">Calculadora de subredes CIDR IPv4</h2>
 
                 <div class="grid md:grid-cols-4 gap-2 mb-6">
                     <div class="flex flex-col md:col-span-2">
@@ -40,7 +38,7 @@
                             <input type="number" min="1" max="32" step="1" id="ipAddress2" class="ml-1 p-2 border border-gray-300 rounded w-20" placeholder="23"/>
                         </div>
                     </div>
-                    <div class="flex flex-col md:col-span-4 mb-4">
+                    <div class="flex flex-col md:col-span-4 mb-2">
                         <label class="mb-2 font-semibold">Selecciona la clase IP:</label>
                         <div class="flex gap-6">
                             <label class="inline-flex items-center gap-1">
@@ -61,15 +59,31 @@
                     </div>
                 </div>
                 <button type="submit"
-                    class="p-2 rounded-3xl w-1/2 mx-auto block text-white font-semibold bg-blue-600 hover:bg-blue-700 focus:outline-2 focus:outline-offset-2 focus:outline-blue-700 active:bg-blue-700">
+                    class="p-2 rounded-3xl w-1/2 mx-auto block mb-8 text-white font-semibold bg-blue-600 hover:bg-blue-700 focus:outline-2 focus:outline-offset-2 focus:outline-blue-700 active:bg-blue-700">
                     Calcular
                 </button>
+                
+                <div class="flex justify-center my-4 text-black">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="mode" value="cidr" class="peer sr-only" checked />
+                        <div class="px-4 py-2 -lg border border-gray-300 peer-checked:bg-blue-600 peer-checked:text-white transition">
+                        CIDR
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer">
+                        <input type="radio" name="mode" value="vlsm" class="peer sr-only" />
+                        <div class="px-4 py-2 border border-gray-300 peer-checked:bg-blue-600 peer-checked:text-white transition">
+                        VLSM
+                        </div>
+                    </label>
+                </div>
             </form>
 
             <!-- Tarjeta 2 -->
             <aside class="md:col-span-2">
-                <div class="p-6 border border-gray-300 bg-stone-950 opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl text-white">
-                    <h2 class="text-xl font-light text-sky-300 mb-4">Resultados</h2>
+                <div class="p-6 border-2 border-gray-400 bg-white opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl text-black">
+                    <h2 class="text-xl font-[CascadiaCode-400] bg-sky-100 text-sky-700 font-semibold px-2 py-0.5 rounded-full inline-block mb-3">Resultados</h2>
                     <div id="results" class="space-y-4">
                         <p>Los resultados se mostraráb aquí</p>
                     </div>
@@ -78,50 +92,42 @@
 
             <!-- Tarjeta 3 -->
             <aside class="md:col-span-2">
-                <div class="p-6 border border-gray-300  bg-stone-950 opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl text-white text-justify">
-                    <h2 class="text-xl font-light text-sky-300 mb-4">¿Qué es el subneteo CIDR?</h2>
+                <div class="p-6 border-2 border-gray-400  bg-white opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl text-black text-justify">
+                    <h2 class="text-xl font-[CascadiaCode-400] text-sky-700 mb-3 flex items-center gap-2">
+                        <span class="text-xl bg-sky-100 text-sky-700 font-semibold px-2 py-0.5 rounded-full">
+                            Info
+                        </span>
+                        ¿Qué es el subneteo CIDR?
+                    </h2>
                     <p>El Subneteo CIDR (Classless Inter-Domain Routing) es un método de enrutamiento en Internet que permite una gestión más eficiente de las direcciones IP al subdividir una red en subredes más pequeñas. El CIDR utiliza la notación de la máscara de subred para identificar la parte de la dirección IP que corresponde a la red y la parte que corresponde a los hosts.</p>
+                    <img src="/src/assets/hola.png  " alt="CIDR Diagram" class="mx-auto w-1/2 h-auto mt-4 rounded-lg shadow-md">
                 </div>
             </aside>
 
-            <div class="flex my-4">
-                <label class="cursor-pointer">
-                    <input type="radio" name="mode" value="cidr" class="peer sr-only" checked />
-                    <div class="px-4 py-2 -lg border border-gray-300 peer-checked:bg-blue-600 peer-checked:text-white transition">
-                    CIDR
-                    </div>
-                </label>
 
-                <label class="cursor-pointer">
-                    <input type="radio" name="mode" value="vlsm" class="peer sr-only" />
-                    <div class="px-4 py-2 border border-gray-300 peer-checked:bg-blue-600 peer-checked:text-white transition">
-                    VLSM
-                    </div>
-                </label>
-                </div>
 
-            <article class="md:col-span-6">
-                <sectionc class="mt-6">
-                    <h2 class="text-xl font-light text-sky-300 mb-4">¿Cómo funciona?</h2>
-                    <p>Para utilizar la calculadora, simplemente ingresa una dirección IP y una máscara de subred en formato CIDR. La calculadora te proporcionará información detallada sobre la red, incluyendo:</p>
+            <article class="md:col-span-6 text-black">
+                <section class="mt-6">
+                    <h2 class="text-xl text-center font-[CascadiaCode-400] text-sky-700 mb-4">¿Cómo funciona?</h2>
+                    <p class="text-bla">Para utilizar la calculadora, simplemente ingresa una dirección IP y una máscara de subred en formato CIDR. La calculadora te proporcionará información detallada sobre la red, incluyendo:</p>
                     <ul class="list-disc pl-5">
                         <li>Dirección de red</li>
                         <li>Dirección de broadcast</li>
                         <li>Rango de direcciones IP disponibles</li>
                         <li>Número total de hosts</li>
                     </ul>
-                </sectionc>
+                </section>
 
                 <section class="mt-6">
-                    <h2 class="text-xl font-light text-sky-300 mb-4">Tabla de clases de las direcciones IP</h2>
-                    <table class="w-full border-collapse border border-gray-300">
+                    <h2 class="text-xl text-center font-[CascadiaCode-400] text-sky-700 mb-4">Tabla de clases de las direcciones IP</h2>
+                    <table class="w-full border-collapse border border-gray-700">
                         <thead>
                             <tr class="bg-blue-950 text-white">
-                                <th class="border border-gray-300 p-2">Clase</th>
-                                <th class="border border-gray-300 p-2">Rango de direcciones</th>
-                                <th class="border border-gray-300 p-2">Máscara de red</th>
-                                <th class="border border-gray-300 p-2">Número de IPs</th>
-                                <th class="border border-gray-300 p-2">Bits de la Máscara de red</th>
+                                <th class="border border-gray-700 p-2">Clase</th>
+                                <th class="border border-gray-700 p-2">Rango de direcciones</th>
+                                <th class="border border-gray-700 p-2">Máscara de red</th>
+                                <th class="border border-gray-700 p-2">Número de IPs</th>
+                                <th class="border border-gray-700 p-2">Bits de la Máscara de red</th>
                             </tr>
                         </thead>
                         <tbody>
