@@ -1,6 +1,3 @@
-<!-- npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css --watch -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,109 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta author="Esteban Rios">
     <link href="/src/output.css" rel="stylesheet">
+    <script src="/src/js/sweetalert2.all.min.js"></script>
+    <script src="/src/js/app.js" defer></script>
+    <script src="/src/js/cidr.js"></script>
     <title>Calculadora Subneteo</title>
 </head>
-<!-- bg-[repeating-linear-gradient(45deg,_#111_0px,_#111_10px,_#1f1f1f_10px,_#1f1f1f_20px)] -->
 <body class="text-sm bg-white text-white min-h-screen font-[Ancizar-400]">
 
-    <header class="bg-white ">
-        <nav>   
-            <h1 class="text-center font-[CascadiaCode-400] text-4xl font-extrabold py-4 bg-gradient-to-r from-blue-700 via-blues-500   to-cyan-400 bg-clip-text text-transparent">Calculadora de Subneteo</h1>
-        </nav>
+    <header class="bg-white">
+        <h1 class="text-center font-[CascadiaCode-400] text-2xl sm:text-3xl md:text-4xl font-extrabold py-4 bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400 bg-clip-text text-transparent">Calculadora de Subneteo</h1>
+        <div class="flex justify-center my-3 text-black">
+            <label class="cursor-pointer">
+                <input type="radio" name="mode" value="cidr" class="peer sr-only" checked />
+                <div class="px-3 sm:px-4 py-2 border border-gray-300 peer-checked:bg-blue-600 peer-checked:text-white transition text-sm sm:text-base">
+                CIDR
+                </div>
+            </label>
+
+            <label class="cursor-pointer">
+                <input type="radio" name="mode" value="vlsm" class="peer sr-only" />
+                <div class="px-3 sm:px-4 py-2 border border-gray-300 peer-checked:bg-blue-600 peer-checked:text-white transition text-sm sm:text-base">
+                VLSM
+                </div>
+            </label>
+        </div>
     </header>
 
-    <div class="container max-w-full px-20  bg-blue-100  p-4 rounded-t-[3rem] ">
+    <div class="container max-w-full px-4 sm:px-6 lg:px-20 bg-blue-100 p-4 rounded-t-[2rem] sm:rounded-t-[3rem]">
 
-        <main class="grid md:grid-cols-6 gap-6 mt-5 items-start">
-            <!-- Tarjeta 1 -->
-            <form id="subnetForm" class="p-6 border-2 bg-white text-black  md:col-span-2 border-gray-400  shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl">
-                <h2 class="mb-4 text-xl font-[CascadiaCode-400] text-sky-700">Calculadora de subredes CIDR IPv4</h2>
+        <section id="sectionCIDR" class="grid grid-cols-1 md:grid-cols-6 gap-4 sm:gap-6 mt-5 items-start">
+            <!-- Tarjeta 1 - Formulario CIDR -->
+            <form id="subnetFormCidr" class="p-4 sm:p-6 border-2 bg-white text-black md:col-span-2 border-gray-400 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl">
+                <h2 class="mb-4 text-lg sm:text-xl font-[CascadiaCode-400] text-sky-700">Calculadora de subredes CIDR IPv4</h2>
 
-                <div class="grid md:grid-cols-4 gap-2 mb-6">
-                    <div class="flex flex-col md:col-span-2">
-                        <label for="ipAddress1" class="mb-1 font-semibold">Dirección IP:</label>
-                        <input type="text" id="ipAddress1" class="p-2 border border-gray-300 rounded" placeholder="10.10.10.10" />
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 sm:mb-6">
+                    <div class="flex flex-col col-span-2">
+                        <label for="ipAddress1" class="mb-1 text-sm sm:text-base font-semibold">Dirección IP:</label>
+                        <input type="text" id="ipAddress1" name="ipAddress1" required class="p-2 text-sm sm:text-base border border-gray-300 rounded" placeholder="10.10.10.10" />
                     </div>
-                    <div class="flex flex-col md:col-span-2">
-                        <label for="ipAddress2" class="mb-1 font-semibold">Mask:</label>
+                    <div class="flex flex-col col-span-2">
+                        <label for="maskCIRD" class="mb-1 text-sm sm:text-base font-semibold">Mask:</label>
                         <div class="flex items-center">
                             <span class="text-xl">/</span>   
-                            <input type="number" min="1" max="32" step="1" id="ipAddress2" class="ml-1 p-2 border border-gray-300 rounded w-20" placeholder="23"/>
+                            <input type="number" required min="1" max="32" step="1" id="maskCIRD" name="maskCIRD" class="ml-1 p-2 text-sm sm:text-base border border-gray-300 rounded w-16 sm:w-20" placeholder="23"/>
                         </div>
                     </div>
-                    <div class="flex flex-col md:col-span-4 mb-2">
-                        <label class="mb-2 font-semibold">Selecciona la clase IP:</label>
-                        <div class="flex gap-6">
-                            <label class="inline-flex items-center gap-1">
-                                <input type="radio" name="ipClass" value="A" class="accent-blue-600" />
-                                <span>A</span>
-                            </label>
-
-                            <label class="inline-flex items-center gap-1">
-                                <input type="radio" name="ipClass" value="B" class="accent-blue-600" />
-                                <span>B</span>
-                            </label>
-
-                            <label class="inline-flex items-center gap-1">
-                                <input type="radio" name="ipClass" value="C" class="accent-blue-600" />
-                                <span>C</span>
-                            </label>
-                        </div>
+                    <div class="flex flex-col col-span-4 mb-2">
+                        <label for="subredes" class="mb-1 text-sm sm:text-base font-semibold">Número de subredes:</label>
+                        <input type="number" id="subredes" name="subredes" required min="1" class="p-2 text-sm sm:text-base border border-gray-300 rounded w-full sm:w-1/3" placeholder="Ejemplo: 4" />
                     </div>
                 </div>
-                <button type="submit"
-                    class="p-2 rounded-3xl w-1/2 mx-auto block mb-8 text-white font-semibold bg-blue-600 hover:bg-blue-700 focus:outline-2 focus:outline-offset-2 focus:outline-blue-700 active:bg-blue-700">
+                <button id="submit-cidr" type="submit"
+                    class="p-2 rounded-3xl w-full sm:w-1/2 mx-auto block mb-4 sm:mb-8 text-sm sm:text-base text-white font-semibold bg-blue-600 hover:bg-blue-700 focus:outline-2 focus:outline-offset-2 focus:outline-blue-700 active:bg-blue-700">
                     Calcular
                 </button>
-                
-                <div class="flex justify-center my-4 text-black">
-                    <label class="cursor-pointer">
-                        <input type="radio" name="mode" value="cidr" class="peer sr-only" checked />
-                        <div class="px-4 py-2 -lg border border-gray-300 peer-checked:bg-blue-600 peer-checked:text-white transition">
-                        CIDR
-                        </div>
-                    </label>
-
-                    <label class="cursor-pointer">
-                        <input type="radio" name="mode" value="vlsm" class="peer sr-only" />
-                        <div class="px-4 py-2 border border-gray-300 peer-checked:bg-blue-600 peer-checked:text-white transition">
-                        VLSM
-                        </div>
-                    </label>
-                </div>
             </form>
 
-            <!-- Tarjeta 2 -->
-            <aside class="md:col-span-2">
-                <div class="p-6 border-2 border-gray-400 bg-white opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl text-black">
-                    <h2 class="text-xl font-[CascadiaCode-400] bg-sky-100 text-sky-700 font-semibold px-2 py-0.5 rounded-full inline-block mb-3">Resultados</h2>
-                    <div id="results" class="space-y-4">
-                        <p>Los resultados se mostraráb aquí</p>
+            <!-- Tarjeta 2 - Resultados CIDR -->
+            <section id="resultadoCIDR" class="md:col-span-4 text-black">
+                <div class="border-2 border-gray-400 bg-white opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl">
+                    <div class="bg-blue-500 text-white p-3 sm:p-4">
+                        <h2 class="font-[CascadiaCode-400] text-white text-lg sm:text-xl font-bold px-2 py-0.5 inline-block mb-2 sm:mb-3">Resultados del subneteo CIDR</h2>
+                    </div>
+                    <div class="space-y-4 p-3 sm:p-4">
+                        <p class="text-sm sm:text-base">Los resultados se mostrarán aquí</p>
                     </div>
                 </div>
-            </aside>
+            </section>
 
-            <!-- Tarjeta 3 -->
-            <aside class="md:col-span-2">
-                <div class="p-6 border-2 border-gray-400  bg-white opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl text-black text-justify">
-                    <h2 class="text-xl font-[CascadiaCode-400] text-sky-700 mb-3 flex items-center gap-2">
-                        <span class="text-xl bg-sky-100 text-sky-700 font-semibold px-2 py-0.5 rounded-full">
+            <!-- Tarjeta 3 - Info CIDR -->
+            <section class="md:col-span-3">
+                <div class="p-4 sm:p-6 border-2 border-gray-400 bg-white opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl text-black text-justify">
+                    <h2 class="text-lg sm:text-xl font-[CascadiaCode-400] text-sky-700 mb-2 sm:mb-3 flex items-center gap-2">
+                        <span class="text-lg sm:text-xl bg-sky-100 text-sky-700 font-semibold px-2 py-0.5 rounded-full">
                             Info
                         </span>
                         ¿Qué es el subneteo CIDR?
                     </h2>
-                    <p>El Subneteo CIDR (Classless Inter-Domain Routing) es un método de enrutamiento en Internet que permite una gestión más eficiente de las direcciones IP al subdividir una red en subredes más pequeñas. El CIDR utiliza la notación de la máscara de subred para identificar la parte de la dirección IP que corresponde a la red y la parte que corresponde a los hosts.</p>
-                    <img src="/src/assets/hola.png  " alt="CIDR Diagram" class="mx-auto w-1/2 h-auto mt-4 rounded-lg shadow-md">
+                    <p class="text-sm sm:text-base">El Subneteo CIDR (Classless Inter-Domain Routing) es un método de enrutamiento en Internet que permite una gestión más eficiente de las direcciones IP al subdividir una red en subredes más pequeñas.</p>
+                    <img src="/src/assets/imagen_cidr.png" alt="CIDR Diagram" class="mx-auto w-full sm:w-1/2 h-auto mt-4 rounded-lg shadow-md">
                 </div>
-            </aside>
+            </section>
 
-
-
-            <article class="md:col-span-6 text-black">
-                <section class="mt-6">
-                    <h2 class="text-xl text-center font-[CascadiaCode-400] text-sky-700 mb-4">¿Cómo funciona?</h2>
-                    <p class="text-bla">Para utilizar la calculadora, simplemente ingresa una dirección IP y una máscara de subred en formato CIDR. La calculadora te proporcionará información detallada sobre la red, incluyendo:</p>
-                    <ul class="list-disc pl-5">
+            <!-- Información adicional -->
+            <article class="md:col-span-3 text-black">
+                <section class="mt-4 sm:mt-6">
+                    <h2 class="text-lg sm:text-xl text-center font-[CascadiaCode-400] text-sky-700 mb-2 sm:mb-4">¿Cómo funciona?</h2>
+                    <p class="text-sm sm:text-base">Para utilizar la calculadora, simplemente ingresa una dirección IP y una máscara de subred en formato CIDR. La calculadora te proporcionará información detallada sobre la red, incluyendo:</p>
+                    <ul class="list-disc pl-5 text-sm sm:text-base">
                         <li>Dirección de red</li>
                         <li>Dirección de broadcast</li>
                         <li>Rango de direcciones IP disponibles</li>
@@ -118,49 +100,180 @@
                     </ul>
                 </section>
 
-                <section class="mt-6">
-                    <h2 class="text-xl text-center font-[CascadiaCode-400] text-sky-700 mb-4">Tabla de clases de las direcciones IP</h2>
-                    <table class="w-full border-collapse border border-gray-700">
-                        <thead>
-                            <tr class="bg-blue-950 text-white">
-                                <th class="border border-gray-700 p-2">Clase</th>
-                                <th class="border border-gray-700 p-2">Rango de direcciones</th>
-                                <th class="border border-gray-700 p-2">Máscara de red</th>
-                                <th class="border border-gray-700 p-2">Número de IPs</th>
-                                <th class="border border-gray-700 p-2">Bits de la Máscara de red</th>
-                            </tr>
+                <section class="mt-4 sm:mt-6">
+                    <h2 class="text-lg sm:text-xl text-center font-[CascadiaCode-400] text-sky-700 mb-2 sm:mb-4">Tabla de clases de las direcciones IP</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-700 text-xs sm:text-sm">
+                            <thead>
+                                <tr class="bg-blue-950 text-white">
+                                    <th class="border border-gray-700 p-1 sm:p-2">Clase</th>
+                                    <th class="border border-gray-700 p-1 sm:p-2">Rango de direcciones</th>
+                                    <th class="border border-gray-700 p-1 sm:p-2">Máscara de red</th>
+                                    <th class="border border-gray-700 p-1 sm:p-2">Número de IPs</th>
+                                    <th class="border border-gray-700 p-1 sm:p-2">Bits de la Máscara</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-300 p-1 sm:p-2">A</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">1.0.0.0 - 126.255.255.255</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">255.0.0.0</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">16,777,216</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">8</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-1 sm:p-2">B</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">128.0.0.0 - 191.255.255.255</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">255.255.0.0</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">1,048,576</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">16</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-1 sm:p-2">C</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">192.0.0.0 - 223.255.255.255</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">255.255.255.0</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">65,536</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">24</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </article>
+        </section>
+
+        <section id="sectionVLSM" class="grid grid-cols-1 md:grid-cols-6 gap-4 sm:gap-6 mt-5 items-start hidden">
+            <!-- Tarjeta 1 - Formulario VLSM -->
+            <form id="subnetVLSM" class="p-4 sm:p-6 border-2 bg-white text-black md:col-span-2 border-gray-400 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl">
+                <h2 class="mb-4 text-lg sm:text-xl font-[CascadiaCode-400] text-sky-700">Calculadora de subredes VLSM IPv4</h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 sm:mb-6">
+                    <div class="flex flex-col col-span-2">
+                        <label for="ipAddress1VLSM" class="mb-1 text-sm sm:text-base font-semibold">Dirección IP base:</label>
+                        <input type="text" id="ipAddress1VLSM" required name="ipAddress1VLSM" class="p-2 text-sm sm:text-base border border-gray-300 rounded" placeholder="10.10.10.10" />
+                    </div>
+                    <div class="flex flex-col col-span-2">
+                        <label for="maskVLSM" class="mb-1 text-sm sm:text-base font-semibold">Mask:</label>
+                        <div class="flex items-center">
+                            <span class="text-xl">/</span>   
+                            <input type="number" required min="1" max="32" step="1" id="maskVLSM" name="masKVLSM" class="ml-1 p-2 text-sm sm:text-base border border-gray-300 rounded w-16 sm:w-20" placeholder="23"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabla para hosts -->
+                <div class="mb-4 sm:mb-6 overflow-x-auto">
+                    <table id="hostsTable" class="w-full text-left border border-gray-300 text-xs sm:text-sm">
+                        <thead class="bg-gray-100">
+                        <tr>
+                            <th class="border border-gray-300 px-1 py-1 sm:px-2">#</th>
+                            <th class="border border-gray-300 px-1 py-1 sm:px-2">Hosts requeridos</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="border border-gray-300 p-2">A</td>
-                                <td class="border border-gray-300 p-2">1.0.0.0 &minus; 126.255.255.255</td>
-                                <td class="border border-gray-300 p-2">255.0.0.0</td>
-                                <td class="border border-gray-300 p-2">16,777,216</td>
-                                <td class="border border-gray-300 p-2">8</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2">B</td>
-                                <td class="border border-gray-300 p-2">128.0.0.0 &minus; 191.255.255.255</td>
-                                <td class="border border-gray-300 p-2">255.255.0.0</td>
-                                <td class="border border-gray-300 p-2">1,048,576</td>
-                                <td class="border border-gray-300 p-2">16</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2">C</td>
-                                <td class="border border-gray-300 p-2">192.0.0.0 &minus; 223.255.255.255</td>
-                                <td class="border border-gray-300 p-2">255.255.255.0</td>
-                                <td class="border border-gray-300 p-2">65,536</td>
-                                <td class="border border-gray-300 p-2">24</td>
-                            </tr>
+                        <tr>
+                            <td class="border border-gray-300 px-1 py-1 sm:px-2">1</td>
+                            <td class="border border-gray-300 px-1 py-1 sm:px-2">
+                                <input type="number" required name="hosts1" min="1" class="w-full border border-gray-300 rounded p-1 text-sm" />
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
+                    <div class="flex justify-center mt-2">
+                        <button type="button" id="agregarFilaB" class="text-xs sm:text-sm px-3 sm:px-4 py-1 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-semibold">
+                            + Agregar subred
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="p-2 rounded-3xl w-full sm:w-1/2 mx-auto block mb-4 sm:mb-8 text-sm sm:text-base text-white font-semibold bg-blue-600 hover:bg-blue-700 focus:outline-2 focus:outline-offset-2 focus:outline-blue-700 active:bg-blue-700">
+                    Calcular
+                </button>
+            </form>
+
+            <!-- Tarjeta 2 - Resultados VLSM -->
+            <aside class="md:col-span-2">
+                <div class="p-4 sm:p-6 border-2 border-gray-400 bg-white opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl text-black">
+                    <h2 class="text-lg sm:text-xl font-[CascadiaCode-400] bg-sky-100 text-sky-700 font-semibold px-2 py-0.5 rounded-full inline-block mb-2 sm:mb-3">Resultados</h2>
+                    <div id="results" class="space-y-4">
+                        <p class="text-sm sm:text-base">Los resultados se mostrarán aquí</p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Tarjeta 3 - Info VLSM -->
+            <aside class="md:col-span-2">
+                <div class="p-4 sm:p-6 border-2 border-gray-400 bg-white opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl text-black text-justify">
+                    <h2 class="text-lg sm:text-xl font-[CascadiaCode-400] text-sky-700 mb-2 sm:mb-3 flex items-center gap-2">
+                        <span class="text-lg sm:text-xl bg-sky-100 text-sky-700 font-semibold px-2 py-0.5 rounded-full">
+                            Info
+                        </span>
+                        ¿Qué es el subneteo VLSM?
+                    </h2>
+                    <p class="text-sm sm:text-base">El Subneteo VLSM (Variable Length Subnet Mask) es una técnica que permite dividir una red en subredes de diferente tamaño, utilizando máscaras de subred de longitud variable.</p>
+                    <img src="/src/assets/imagen_vlsm.png" alt="CIDR Diagram" class="mx-auto w-full sm:w-1/2 h-auto mt-4 rounded-lg shadow-md">
+                </div>
+            </aside>
+
+            <!-- Información adicional -->
+            <article class="md:col-span-6 text-black">
+                <section class="mt-4 sm:mt-6">
+                    <h2 class="text-lg sm:text-xl text-center font-[CascadiaCode-400] text-sky-700 mb-2 sm:mb-4">¿Cómo funciona?</h2>
+                    <p class="text-sm sm:text-base">Para utilizar la calculadora, simplemente ingresa una dirección IP y una máscara de subred en formato CIDR. La calculadora te proporcionará información detallada sobre la red, incluyendo:</p>
+                    <ul class="list-disc pl-5 text-sm sm:text-base">
+                        <li>Dirección de red</li>
+                        <li>Dirección de broadcast</li>
+                        <li>Rango de direcciones IP disponibles</li>
+                        <li>Número total de hosts</li>
+                    </ul>
+                </section>
+
+                <section class="mt-4 sm:mt-6">
+                    <h2 class="text-lg sm:text-xl text-center font-[CascadiaCode-400] text-sky-700 mb-2 sm:mb-4">Tabla de clases de las direcciones IP</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-700 text-xs sm:text-sm">
+                            <thead>
+                                <tr class="bg-blue-950 text-white">
+                                    <th class="border border-gray-700 p-1 sm:p-2">Clase</th>
+                                    <th class="border border-gray-700 p-1 sm:p-2">Rango de direcciones</th>
+                                    <th class="border border-gray-700 p-1 sm:p-2">Máscara de red</th>
+                                    <th class="border border-gray-700 p-1 sm:p-2">Número de IPs</th>
+                                    <th class="border border-gray-700 p-1 sm:p-2">Bits de la Máscara</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-300 p-1 sm:p-2">A</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">1.0.0.0 - 126.255.255.255</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">255.0.0.0</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">16,777,216</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">8</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-1 sm:p-2">B</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">128.0.0.0 - 191.255.255.255</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">255.255.0.0</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">1,048,576</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">16</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-1 sm:p-2">C</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">192.0.0.0 - 223.255.255.255</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">255.255.255.0</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">65,536</td>
+                                    <td class="border border-gray-300 p-1 sm:p-2">24</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </article>
+        </section>
 
-        </main>
-    <footer class=" mt-10 bg-gray-900 text-white text-center p-4">
-        © 2025 - Todos los derechos reservados
-    </footer>
+        <footer class="mt-8 bg-gray-900 text-white text-center p-3 sm:p-4 text-sm sm:text-base">
+            © 2025 - Todos los derechos reservados
+        </footer>
     </div>
-
 </body>
 </html>
