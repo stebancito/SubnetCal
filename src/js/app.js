@@ -1,6 +1,4 @@
 
-
-
 function esIPValida(ip) {
     const regex = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
     return regex.test(ip); 
@@ -8,8 +6,24 @@ function esIPValida(ip) {
 document.addEventListener('DOMContentLoaded', function(){
 
 
-    // Initialize the app
     console.log('Iniciando la aplicación...');
+    const text = "Calculadora de Subneteo";
+    const element = document.getElementById('typewriter-text');
+    const cursor = document.getElementById('typewriter-cursor');
+    let i = 0;
+
+    function typeWriter() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 150); // Velocidad (150ms por letra)
+        } else {
+            cursor.style.display = 'none'; // Oculta el cursor al finalizar
+        }
+    }
+
+    typeWriter(); // Inicia la animación
+
 
     // SELECTOR DE MODO
     const radios = document.querySelectorAll('input[name="mode"]');
@@ -42,17 +56,17 @@ document.addEventListener('DOMContentLoaded', function(){
 
         // Número de IP
         const cell1 = newRow.insertCell(0);
-        cell1.className = "border border-gray-300 px-2 py-1";
+        cell1.className = "border border-slate-800 px-2 py-1";
         cell1.textContent = rowCount + 1;
 
         // Input de hosts
         const cell2 = newRow.insertCell(1);
-        cell2.className = "border border-gray-300 px-2 py-1";
-        cell2.innerHTML = `<input type="number" name="hosts${rowCount + 1}" required min="1" class="w-full border border-gray-300 rounded p-1" />`;
+        cell2.className = "border border-slate-800 px-2 py-1";
+        cell2.innerHTML = `<input type="number" name="hosts${rowCount + 1}" required min="1" class="w-full border border-slate-800 rounded p-1" />`;
 
         // Botón eliminar
         const cell3 = newRow.insertCell(2);
-        cell3.className = "border border-gray-300 px-2 py-1 text-center";
+        cell3.className = "border border-slate-800 px-2 py-1 text-center";
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '❌';
         deleteBtn.className = 'text-red-500 hover:text-red-700 font-bold';
@@ -67,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function(){
         cell3.appendChild(deleteBtn);
         });
 
-        // Reordenar los índices (#) después de eliminar
+        // Reordenar los índices despues de eliminar
         function renumerarFilas() {
         const tableBody = document.getElementById('hostsTable').getElementsByTagName('tbody')[0];
         [...tableBody.rows].forEach((row, index) => {
@@ -78,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
+    // DOM CIDR RESULTADO
 
     function mostrarResultadoCIDR(resultado) {
         const resultadoDiv = document.getElementById('resultadoCIDR');
@@ -85,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
         // Contenedor principal
         const contenedorPrincipal = document.createElement('div');
-        contenedorPrincipal.className = 'bg-white overflow-hidden mb-8 border border-gray-400 opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl';
+        contenedorPrincipal.className = 'bg-white overflow-hidden mb-8 border border-2 border-slate-800 opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl';
 
         const encabezado = document.createElement('div');
         encabezado.className = 'bg-blue-500 text-white p-4';
@@ -98,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function(){
         // Obtener valores comunes de la primera subred
         const primeraSubred = resultado[Object.keys(resultado)[0]];
         const infoGeneral = document.createElement('div');
-        infoGeneral.className = 'p-4 bg-gray-50 text-gray-700 border-t border-b border-gray-300';
+        infoGeneral.className = 'p-4 bg-gray-50 text-gray-700 border-t border-b border-slate-800';
 
         infoGeneral.innerHTML = `
             <p class="mb-1"><strong>Máscara de subred:</strong> <a class='font-mono'>${primeraSubred.mascara_subred}</a></p>
@@ -155,6 +170,81 @@ document.addEventListener('DOMContentLoaded', function(){
         resultadoDiv.appendChild(contenedorPrincipal);
     }
 
+    //DOM VLSM RESULTADO
+
+    function mostrarResultadoVLSM(resultado){
+        const resultadoDiv = document.getElementById('resultadoVLSM');
+        resultadoDiv.innerHTML = ''; // Limpiar contenido previo
+
+        // Contenedor principal
+        const contenedorPrincipal = document.createElement('div');
+        contenedorPrincipal.className = 'bg-white overflow-hidden mb-8 border border-2 border-slate-800 opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl';
+
+        const encabezado = document.createElement('div');
+        encabezado.className = 'bg-blue-500 text-white p-4';
+        encabezado.innerHTML = `
+            <h2 class="text-xl font-[CascadiaCode-400] font-bold">Resultados del Subneteo VLSM</h2>
+            <p class="text-blue-100">Total de subredes: ${Object.keys(resultado).length}</p>
+        `;
+        contenedorPrincipal.appendChild(encabezado);
+
+        // Obtener valores comunes de la primera subred
+        const primeraSubred = resultado[Object.keys(resultado)[0]];
+        const infoGeneral = document.createElement('div');
+        infoGeneral.className = 'p-4 bg-gray-50 text-gray-700 border-t border-b border-slate-800';
+
+        // Contenedor de tabla
+        const tablaContainer = document.createElement('div');
+        tablaContainer.className = 'overflow-x-auto p-4';
+
+        // Tabla responsive
+        const tabla = document.createElement('table');
+        tabla.className = 'w-full border-collapse';
+
+        // Encabezados de tabla
+        const thead = document.createElement('thead');
+        thead.className = 'bg-blue-50';
+        thead.innerHTML = `
+            <tr class="text-left text-blue-700">
+                <th class="p-3 border-b border-blue-200">Subred</th>
+                <th class="p-3 border-b border-blue-200">IP Subred</th>
+                <th class="p-3 border-b border-blue-200">IP Inicial</th>
+                <th class="p-3 border-b border-blue-200">IP Final</th>
+                <th class="p-3 border-b border-blue-200">Broadcast</th>
+                <th class="p-3 border-b border-blue-200">Mascara de subred</th>
+                <th class="p-3 border-b border-blue-200"># Hosts</th>
+            </tr>
+        `;
+        tabla.appendChild(thead);
+
+        // Cuerpo de tabla
+        const tbody = document.createElement('tbody');
+        let cont = 1;
+        Object.keys(resultado).forEach((clave) => {
+            
+            const subred = resultado[clave];
+            const fila = document.createElement('tr');
+            fila.className = 'hover:bg-blue-50 border-b border-blue-100';
+            fila.innerHTML = `
+                <td class="p-3 font-medium text-blue-600">${cont}</td>
+                <td class="p-3 font-mono">${subred.subred}</td>
+                <td class="p-3 font-mono">${subred.ip_inicial}</td>
+                <td class="p-3 font-mono">${subred.ip_final}</td>
+                <td class="p-3 font-mono">${subred.ip_broadcast}</td>
+                <td class="p-3 font-mono">${subred.mascara_subred}</td>
+                <td class="p-3 font-mono">${subred.hosts_subred}</td>
+            `;
+            tbody.appendChild(fila);
+
+            cont++;
+        });
+
+        tabla.appendChild(tbody);
+        tablaContainer.appendChild(tabla);
+        contenedorPrincipal.appendChild(tablaContainer);
+        resultadoDiv.appendChild(contenedorPrincipal);
+    }
+
     //FORMULARIO CIDR
 
     const formCIDR = document.getElementById('subnetFormCidr');
@@ -163,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
         const direc_ip = document.getElementById('ipAddress1').value.trim();
         const subnet_mask = document.getElementById('maskCIRD').value;
-        // const seleccion = document.querySelector('input[name="ipClass"]:checked');
         const subredes = document.getElementById('subredes').value;
 
         if (!esIPValida(direc_ip)) {
@@ -186,24 +275,11 @@ document.addEventListener('DOMContentLoaded', function(){
             return;
         }
 
-        
-        // if (!seleccion) {
-        //     Swal.fire({
-        //         icon: 'warning',
-        //         title: 'Clase IP faltante',
-        //         text: 'Debes seleccionar una clase IP (A, B o C).',
-        //         confirmButtonColor: '#3056e6',
-        //     });
-        //     return;
-        // }
-
         console.log(`IP ingresada (CIDR): ${direc_ip}`);
         console.log(`Mask ingresada (CIDR): ${subnet_mask}`);
-        // console.log(`Clase (CIDR): ${seleccion.value}`);
         console.log(`Subredes (CIDR): ${subredes}`);
 
-        const resultadoCIDR = calcularCIDR(direc_ip, subnet_mask, subredes);
-        mostrarResultadoCIDR(resultadoCIDR);
+        mostrarResultadoCIDR(calcularCIDR(direc_ip, subnet_mask, subredes));
 
     });
 
@@ -244,7 +320,8 @@ document.addEventListener('DOMContentLoaded', function(){
         console.log(`Mask ingresada (VLSM): ${maskVLSM}`);
         console.log("Valores de hosts requeridos:", valoresHosts);
 
-        //LLAMAR A FUNCION PARA CALCULAR VLSM
+        mostrarResultadoVLSM(calcularVLSM(direc_ip, maskVLSM, valoresHosts));
+
     });
 
 

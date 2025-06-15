@@ -10,23 +10,25 @@ function bitsADecimal(bitsEnUno) {
     return (1 << 8) - (1 << (8 - bitsEnUno));
 }
 
+// Convertir el salto total a una IP válida (como si fuera una suma de bytes)
 function calcularSubredesCIDR(ip_octetos, octeto_a_trabajar, saltos_subred, subredes_reales, array_subredes) {
-        
     for (let i = 0; i < subredes_reales; i++) {
-        const subred = [];
-        for (let j = 0; j < 4; j++) {
-            if (j < octeto_a_trabajar) {
-                subred.push(ip_octetos[j]);
-            } else if (j === octeto_a_trabajar) {
-                subred.push(i * saltos_subred);
-            } else {
-                subred.push(0);
-            }
+        const subred = [...ip_octetos];
+        let salto_total = i * saltos_subred;
+
+        // Aplicar el salto desde el octeto a trabajar, propagando el overflow si es necesario
+        for (let j = octeto_a_trabajar; j >= 0; j--) {
+            const nuevo_valor = subred[j] + (salto_total % 256);
+            subred[j] = nuevo_valor % 256;
+            salto_total = Math.floor(salto_total / 256) + Math.floor(nuevo_valor / 256);
         }
-        console.log(`Subred ${i + 1}: ${subred.join('.')}`);
+
         array_subredes.push(subred);
     }
 }
+
+
+
 
 function calcularDatosSubredes(array_subredes, octeto_a_trabajar, saltos_subred, hosts_por_subred, obj_resultado, bits_mask_final) {
     for (let i = 0; i < array_subredes.length; i++) {
@@ -44,20 +46,6 @@ function calcularDatosSubredes(array_subredes, octeto_a_trabajar, saltos_subred,
             }
         }
 
-        //for para llenar ip final
-        const ip_final = [];
-        for (let j = 0; j < 4; j++) {
-            if (j < octeto_a_trabajar) {
-                ip_final.push(subred[j]);
-            } else if (j === octeto_a_trabajar) {
-                ip_final.push(subred[j] + saltos_subred - 1); // IP final es la subred + saltos - 2
-            } else if (j === 3) {
-                ip_final.push(254);
-            }else {
-                ip_final.push(255);
-            }
-        }
-
         const ip_broadcast = [];
         //for para llenar ip broadcast
         for (let j = 0; j < 4; j++) {
@@ -70,6 +58,16 @@ function calcularDatosSubredes(array_subredes, octeto_a_trabajar, saltos_subred,
             }
         }
 
+        const ip_final = [...ip_broadcast];
+        for (let k = 3; k >= 0; k--) {
+            if (ip_final[k] > 0) {
+                ip_final[k] -= 1;
+                break;
+            } else {
+                ip_final[k] = 255; // underflow hacia el octeto anterior
+            }
+        }
+                
         const mascara_subred = [];
         //for para llenar mascara de subred
         for (let j = 0; j < 4; j++) {
@@ -103,6 +101,9 @@ function calcularCIDR(direc_ip, subnet_mask, subredes){
 
     //selecionamos octeto que tenga los ultimos bits de la mascara
     const bit_octeto = bits_mask_final % 8;
+    if (bit_octeto === 0) {
+        bit_octeto = 8; // Si es 0, significa que es un octeto completo
+    }
     const octeto_decimal = bitsADecimal(bit_octeto);
 
     const saltos_subred = 256 - octeto_decimal;
