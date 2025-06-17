@@ -1,12 +1,10 @@
+
 function bitsADecimal(bitsEnUno) {
-    // bitsEnUno: número de bits consecutivos en 1 desde la izquierda, en un octeto (máximo 8)
+
     if (bitsEnUno === 0) return 0;
     if (bitsEnUno > 8) bitsEnUno = 8;
 
-    // Ejemplo: bitsEnUno = 7
-    // Creamos un número con bitsEnUno bits a 1 seguidos desde la izquierda
-    // Para octeto, usamos 8 bits: (1 << 8) = 256
-    // Restamos (1 << (8 - bitsEnUno)) para dejar esos bits en 1
+
     return (1 << 8) - (1 << (8 - bitsEnUno));
 }
 
@@ -14,9 +12,15 @@ function bitsADecimal(bitsEnUno) {
 function calcularSubredesCIDR(ip_octetos, octeto_a_trabajar, saltos_subred, subredes_reales, array_subredes) {
     for (let i = 0; i < subredes_reales; i++) {
         const subred = [...ip_octetos];
+
+        // Inicializar a cero desde el octeto a trabajar en adelante
+        for (let k = octeto_a_trabajar; k < 4; k++) {
+            subred[k] = 0;
+        }
+
         let salto_total = i * saltos_subred;
 
-        // Aplicar el salto desde el octeto a trabajar, propagando el overflow si es necesario
+        // Aplicar el salto al octeto a trabajar y propagar hacia la izquierda si se pasa de 255
         for (let j = octeto_a_trabajar; j >= 0; j--) {
             const nuevo_valor = subred[j] + (salto_total % 256);
             subred[j] = nuevo_valor % 256;
@@ -25,7 +29,9 @@ function calcularSubredesCIDR(ip_octetos, octeto_a_trabajar, saltos_subred, subr
 
         array_subredes.push(subred);
     }
+    console.log('Subredes calculadas:', array_subredes);
 }
+
 
 
 
@@ -97,10 +103,21 @@ function calcularCIDR(direc_ip, subnet_mask, subredes){
     const bit_prestados = Math.ceil(Math.log2(subredes));
     const subredes_reales = Math.pow(2, bit_prestados);
 
+
     const bits_mask_final = parseInt(subnet_mask) + bit_prestados;
 
+    if (bits_mask_final > 32) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Bits de máscara inválidos',
+            text: `Demasiados bits de nueva mascara ${bits_mask_final}. El máximo es 32. Pruebe con una máscara menor o menos subredes.`,
+        });
+        return;
+    }
+
+
     //selecionamos octeto que tenga los ultimos bits de la mascara
-    const bit_octeto = bits_mask_final % 8;
+    let bit_octeto = bits_mask_final % 8;
     if (bit_octeto === 0) {
         bit_octeto = 8; // Si es 0, significa que es un octeto completo
     }
@@ -120,6 +137,7 @@ function calcularCIDR(direc_ip, subnet_mask, subredes){
     console.log(`Máscara decimal: ${octeto_decimal}`);
     console.log(`Saltos de subred: ${saltos_subred}`);
     console.log(`Hosts por subred: ${hosts_por_subred}`);
+
 
     const array_subredes = [];
     calcularSubredesCIDR(ip_octetos, octeto_a_trabajar, saltos_subred, subredes_reales, array_subredes);

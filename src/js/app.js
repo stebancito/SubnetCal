@@ -56,17 +56,17 @@ document.addEventListener('DOMContentLoaded', function(){
 
         // Número de IP
         const cell1 = newRow.insertCell(0);
-        cell1.className = "border border-slate-800 px-2 py-1";
+        cell1.className = "border border-gray-300  p-2";
         cell1.textContent = rowCount + 1;
 
         // Input de hosts
         const cell2 = newRow.insertCell(1);
-        cell2.className = "border border-slate-800 px-2 py-1";
-        cell2.innerHTML = `<input type="number" name="hosts${rowCount + 1}" required min="1" class="w-full border border-slate-800 rounded p-1" />`;
+        cell2.className = "border border-gray-300  p-2";
+        cell2.innerHTML = `<input type="number" name="hosts${rowCount + 1}" required min="1" class="w-full border border-gray-300  rounded p-1" />`;
 
         // Botón eliminar
         const cell3 = newRow.insertCell(2);
-        cell3.className = "border border-slate-800 px-2 py-1 text-center";
+        cell3.className = "border border-gray-300  px-2 py-1 text-center";
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '❌';
         deleteBtn.className = 'text-red-500 hover:text-red-700 font-bold';
@@ -100,12 +100,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
         // Contenedor principal
         const contenedorPrincipal = document.createElement('div');
-        contenedorPrincipal.className = 'bg-white overflow-hidden mb-8 border border-2 border-slate-800 opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl';
+        contenedorPrincipal.className = ' bg-blue-50 p-8 rounded-xl shadow-lg';
 
         const encabezado = document.createElement('div');
-        encabezado.className = 'bg-blue-500 text-white p-4';
+        encabezado.className = 'bg-blue-600 text-white p-4 rounded-t-lg -mt-8 -mx-8 mb-6';
         encabezado.innerHTML = `
-            <h2 class="text-xl font-[CascadiaCode-400] font-bold">Resultados del Subneteo CIDR</h2>
+            <h2 class="font-[CascadiaCode-400] text-xl font-bold">Resultados del Subneteo CIDR</h2>
             <p class="text-blue-100">Total de subredes: ${Object.keys(resultado).length}</p>
         `;
         contenedorPrincipal.appendChild(encabezado);
@@ -113,12 +113,14 @@ document.addEventListener('DOMContentLoaded', function(){
         // Obtener valores comunes de la primera subred
         const primeraSubred = resultado[Object.keys(resultado)[0]];
         const infoGeneral = document.createElement('div');
-        infoGeneral.className = 'p-4 bg-gray-50 text-gray-700 border-t border-b border-slate-800';
+        infoGeneral.className = 'p-4 bg-gray-50 text-gray-700 border-t border-b border-slate-400';
 
         infoGeneral.innerHTML = `
             <p class="mb-1"><strong>Máscara de subred:</strong> <a class='font-mono'>${primeraSubred.mascara_subred}</a></p>
             <p><strong>Hosts por subred:</strong><a class='font-mono'> ${primeraSubred.hosts_por_subred}</a></p>
+            <p><strong>Numero de saltos de subred:</strong><a class='font-mono'> ${primeraSubred.saltos_subred}</a></p>
         `;
+        
 
         contenedorPrincipal.appendChild(infoGeneral);
 
@@ -178,10 +180,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
         // Contenedor principal
         const contenedorPrincipal = document.createElement('div');
-        contenedorPrincipal.className = 'bg-white overflow-hidden mb-8 border border-2 border-slate-800 opacity-95 shadow-lg transition-transform hover:scale-[1.02] hover:shadow-xl';
+        contenedorPrincipal.className = 'bg-blue-50 p-8 rounded-xl shadow-lg';
 
         const encabezado = document.createElement('div');
-        encabezado.className = 'bg-blue-500 text-white p-4';
+        encabezado.className = 'bg-blue-600 text-white p-4 rounded-t-lg -mt-8 -mx-8 mb-6';
         encabezado.innerHTML = `
             <h2 class="text-xl font-[CascadiaCode-400] font-bold">Resultados del Subneteo VLSM</h2>
             <p class="text-blue-100">Total de subredes: ${Object.keys(resultado).length}</p>

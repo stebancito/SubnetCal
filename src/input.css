@@ -8,7 +8,13 @@
 
 @font-face {
   font-family: 'Ancizar-400';
-  src: url('/public/fonts/Roboto/Roboto-VariableFont_wdth\,wght.ttf') format('truetype');
+  src: url('/public/fonts/Ancizar_Sans/AncizarSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto-400';
+  src: url('/public/fonts/Roboto/Roboto-VariableFont_wdth.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
@@ -21,7 +27,13 @@
     50% { opacity: 0; }
 }
         
-
+@theme{
+  --color-blue-chido: #aeb8fe;
+  --color-blue-medio: #758bfd;
+  --color-blue-fuerte: #27187e;
+  --color-naranja-bien: #ff8600;
+  --color-gris-raro: #f1f2f6;
+}
 
 
 
